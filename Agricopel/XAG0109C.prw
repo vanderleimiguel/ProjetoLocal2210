@@ -485,7 +485,7 @@ User Function 109IDANFE(_cNota,_cSerie)//u_109IDANFE('000003268','2')
 			_dEmis    	:= aStNotas[_i][3]
 			SF2->(dbsetorder(1))
 			SF2->(dbSeek(xFilial('SF2') + _cDoc + _cSerie))
-			cPasta 		:= "C:\TEMP\"
+			cPasta 		:= "C:\TEMP\teste"
 			_lExibe   	:= .F.
 			//Pega o IDENT da empresa
 			cIdent 		:= RetIdEnti() //->Entidade
@@ -514,9 +514,10 @@ User Function 109IDANFE(_cNota,_cSerie)//u_109IDANFE('000003268','2')
 			IF Alltrim(aImpressora[1]) $ "Microsoft Print to PDF|PDFCreator|Cute PDF Writer|PDF"
 				oDanfe := FWMSPrinter():New(cFilePrint, IMP_PDF, .F., , .T.)
 				oDanfe:nDevice  := 6
+				cPasta := cGetFile( "All Text files (*.PDF) ", "Selecione o local...",,, .F., GETF_NETWORKDRIVE + GETF_LOCALFLOPPY + GETF_LOCALHARD + GETF_RETDIRECTORY,.T. )			
 			Else
 				//oDanfe := FWMSPrinter():New(cFilePrint, IMP_SPOOL, .F., , .T.)
-				oDanfe := FwMsPrinter():New(cFilePrint, IMP_SPOOL, .T.,,.T.,,,aImpressora[1])
+				oDanfe := FwMsPrinter():New(cFilePrint, IMP_SPOOL, .F.,,.T.,,,aImpressora[1])
 				oDanfe:nDevice  := 2
 			endIf
 			oDanfe:SetResolution(78)
