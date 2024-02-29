@@ -17,11 +17,11 @@
 #DEFINE MAXITEMP2  049					// M·ximo de produtos para a pagina 2 em diante
 #DEFINE MAXITEMP2F 069					// M·ximo de produtos para a p·gina 2 em diante quando a p·gina n„o possui informaÁıes complementares
 #DEFINE MAXITEMP3  025					// M·ximo de produtos para a pagina 2 em diante (caso utilize a opÁ„o de impressao em verso) - Tratamento implementado para atender a legislacao que determina que a segunda pagina de ocupar 50%.
-#DEFINE MAXITEMC   035					// M·xima de caracteres por linha de produtos/serviÁos
+#DEFINE MAXITEMC   045//035				// M·xima de caracteres por linha de produtos/serviÁos
 #DEFINE MAXMENLIN  080					// M·ximo de caracteres por linha de dados adicionais
 #DEFINE MAXMSG     013					// M·ximo de dados adicionais por p·gina
-#DEFINE MAXVALORC  009					// M·ximo de caracteres por linha de valores numÈricos
-#DEFINE MAXCODPRD  050					// M·ximo de caracteres do codigo de produtos/servicos conforme o tamanho do quadro "Cod. prod"
+#DEFINE MAXVALORC  012//009				// M·ximo de caracteres por linha de valores numÈricos
+#DEFINE MAXCODPRD  050   				// M·ximo de caracteres do codigo de produtos/servicos conforme o tamanho do quadro "Cod. prod"
 
 /*/
 ‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹‹
@@ -1328,7 +1328,7 @@ local aMarca		:= {}
 local aNumeracao	:= {}
 Local lNFCE 		:= Substr(oNFe:_NFe:_InfNfe:_ID:Text,24,2) == "65"
 local nPosOnu		:= 0
-local nMaxUn		:= 2
+local nMaxUn		:= 4//2
 local cAuxUn		:= ""
 local lSpedCodOnu	:= existFunc("SpedCodOnu") .and. allTrim(superGetMv("MV_NONUINF",,"0")) == "1" 
 Local lInfAdProd	:= .F.

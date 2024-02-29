@@ -124,12 +124,12 @@ static function DPreDanfeNF(cModNF,cNota,cSerie,cCliFor,cLoja)
     cAliasNF := "SF1"
     nIndice := 1
   endif
-  /*
+  
   aCampo := {{"F1_TIPO","F1_EMISSAO","F1_HORA","F1_SAIDA","F1_TRANSP"},;
-        {"F2_TIPO","F2_EMISSAO","F2_HORA","F2_SAIDA","F2_TRANSP"}}
-  */
-    aCampo := {{"F1_TIPO","F1_EMISSAO","F1_HORA","F1_DTDIGIT","F1_TRANSP"},;
-    	         {"F2_TIPO","F2_EMISSAO","F2_ZZHRSAI","F2_EMISSAO","F2_TRANSP"}}
+        {"F2_TIPO","F2_EMISSAO","F2_HORA","F2_EMISSAO","F2_TRANSP"}}
+  
+    // aCampo := {{"F1_TIPO","F1_EMISSAO","F1_HORA","F1_DTDIGIT","F1_TRANSP"},;
+    	        //  {"F2_TIPO","F2_EMISSAO","F2_ZZHRSAI","F2_EMISSAO","F2_TRANSP"}}
   DbSelectArea(cAliasNF)
   (cAliasNF)->(DbSeek(xFilial(cAliasNF)+cNota+cSerie+cCliFor+cLoja,.F.))
   
@@ -483,17 +483,17 @@ static function DPreDanfeNF(cModNF,cNota,cSerie,cCliFor,cLoja)
 
     //Mensagens do Template:
     _zVolta := 0
-    SZZ->(dbSetOrder(1))
-    If SZZ->(dbSeek( xFilial("SZZ") + cTipoNF + cChave ))
+  //   SZZ->(dbSetOrder(1))
+  //   If SZZ->(dbSeek( xFilial("SZZ") + cTipoNF + cChave ))
       
-      While SZZ->(!Eof()) .And. (SZZ->ZZ_TIPODOC == cTipoNF) .And. (SZZ->ZZ_DOC + SZZ->ZZ_SERIE + SZZ->ZZ_CLIFOR + SZZ->ZZ_LOJA == cChave)                         
-        If !Empty(Alltrim(SZZ->ZZ_TXTMENS))
-          cMensagem += Alltrim(SZZ->ZZ_TXTMENS)+" "+CRLF
-          _zVolta := 1
-        EndIf			              
-        SZZ->(dbSkip())              
-      EndDo    
-    Endif
+  //     While SZZ->(!Eof()) .And. (SZZ->ZZ_TIPODOC == cTipoNF) .And. (SZZ->ZZ_DOC + SZZ->ZZ_SERIE + SZZ->ZZ_CLIFOR + SZZ->ZZ_LOJA == cChave)                         
+  //       If !Empty(Alltrim(SZZ->ZZ_TXTMENS))
+  //         cMensagem += Alltrim(SZZ->ZZ_TXTMENS)+" "+CRLF
+  //         _zVolta := 1
+  //       EndIf			              
+  //       SZZ->(dbSkip())              
+  //     EndDo    
+  //   Endif
   Endif  
   cResFisco := ""
   
@@ -1293,7 +1293,7 @@ static function PreDanfeProc(cModNF)
     
     for nI := 1 to Len(aTabImposto)
       oPrinter:Say(nLinha,002,aTabImposto[nI][1],oFont08:oFont)
-      oPrinter:Say(nLinha,025,U_MPREDANF(Left(aTabImposto[nI][1],3)),oFont08:oFont)
+      // oPrinter:Say(nLinha,025,U_MPREDANF(Left(aTabImposto[nI][1],3)),oFont08:oFont)
       oPrinter:Say(nLinha,160,AllTrim(aTabImposto[nI][2]),oFont08:oFont)
       oPrinter:Say(nLinha,270,AllTrim(aTabImposto[nI][3]),oFont08:oFont)
       oPrinter:Say(nLinha,380,AllTrim(aTabImposto[nI][4]),oFont08:oFont)

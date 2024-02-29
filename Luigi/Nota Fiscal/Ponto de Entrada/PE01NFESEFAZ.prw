@@ -1,71 +1,97 @@
-#Include "Protheus.ch"
-#INCLUDE "TOTVS.CH"
+//RTASK0018479-DEP-FECHADO-JUNDIAI - Renato Bandeira - 08/01/2024
+#include "totvs.ch"
 
-/*/{Protheus.doc} TRWRREC1
-Função Relatorio de Reclassificacao
-@author Wagner Neves
-@since 05/01/2024
-@version 1.0
-@type function
-@obs Posições do ParamIXB:
-    001 - aProd       -  Produto
-    002 - cMensCli    -  Mensagem da nota
-    003 - cMensFis    -  Mensagem padrao
-    004 - aDest       -  Destinatario
-    005 - aNota       -  Numero da nota
-    006 - aInfoItem   -  Informações do Item
-    007 - aDupl       -  Duplicata
-    008 - aTransp     -  Transporte
-    009 - aEntrega    -  Entrega
-    010 - aRetirada   -  Retirada
-    011 - aVeiculo    -  Veiculo
-    012 - aReboque    -  Placa Reboque
-    013 - aNfVincRur  -  Nota Produtor Rural Referenciada
-    014 - aEspVol     -  Especie Volume
-    015 - aNfVinc     -  NF Vinculada
-    016 - aDetPag     -  
-/*/
-User Function PE01NFESEFAZ()
-    Local aArea     := GetArea()
-    Local aDados    := ParamIXB
-    Local aProd     := aDados[1]
-    Local cMensCli  := aDados[2]
-    Local cMensFis  := aDados[3]
-    Local aDest     := aDados[4]
-    Local aNota     := aDados[5]
-    Local aInfoItem := aDados[6]
-    Local aDupl     := aDados[7]
-    Local aTransp   := aDados[8]
-    Local aEntrega  := aDados[9]
-    Local aRetirada := aDados[10]
-    Local aVeiculo  := aDados[11]
-    Local aReboque  := aDados[12]
-    Local aNfVincRur:= aDados[13]
-    Local aEspVol   := aDados[14]
-    Local aNfVinc   := aDados[15]
-    Local aDetPag   := aDados[16]
-    Local aObsCotAux:= aDados[17]
-    Local cMenNota  := ""
-    Local cXMenNot  := ""
-    Local cImprime  := ""
-   
-    SC5->(DbSetOrder(1))
-    SC5->(DbGoTop())
-    If dbseek(xFilial("SC5") + SD2->D2_PEDIDO)
-        cMenNota    := SC5->C5_MENNOTA
-        cXMenNot    := SC5->C5_XMENNOT
+/*
+====================================================================================
+Programa............: PE01NFESEFAZ()
+Autor...............: Flávio Dentello
+Data................: 13/04/2017
+Descricao / Objetivo: Ponto de entrada para inclusão de mensagens na DANFE
+Doc. Origem.........: GAP - FIS29
+Solicitante.........: Cliente
+Uso.................: Marfrig
+Obs.................:
+=====================================================================================
+*/
 
-        If Empty(cMenNota)
-            cImprime := cXMenNot
-        ElseIf !Empty(cMenNota) .AND. Empty(cXMenNot)
-            cImprime    := cMenNota
-        ElseIf !Empty(cMenNota) .AND. !Empty(cXMenNot)
-            cImprime    := cMenNota + " - " + cXMenNot
-        EndIf
+user function PE01NFESEFAZ()
+	local aArea			:= getArea()
+	local aAreaSC5		:= SC5->(getArea())
+	local aAreaSC6		:= SC6->(getArea())
+	local aAreaSF7		:= SF7->(getArea())
+	local aAreaSF4		:= SF4->(getArea())
+	local aAreaSA2		:= SA2->(getArea())
+	local aAreaSA1		:= SA1->(getArea())
+	local aAreaSM4		:= SM4->(getArea())
+	Local aAreaDAK		:= DAK->(getArea())
+	Local aAreaDA3		:= DA3->(getArea())
+	Local aAreaSFT		:= SFT->(getArea())
+	local aProd     	:= PARAMIXB[1]
+	local cMensCli  	:= PARAMIXB[2] //+ CRLF
+	local cMensFis  	:= PARAMIXB[3]
+	local aDest     	:= PARAMIXB[4]
+	local aNota     	:= PARAMIXB[5]
+	local aInfoItem 	:= PARAMIXB[6]
+	local aDupl     	:= PARAMIXB[7]
+	local aTransp   	:= PARAMIXB[8]
+	local aEntrega  	:= PARAMIXB[9]
+	local aRetirada 	:= PARAMIXB[10]
+	local aVeiculo  	:= PARAMIXB[11]
+	local aReboque  	:= PARAMIXB[12]
+	local aNfVincRur	:= PARAMIXB[13]
+	Local aEspVol     	:= PARAMIXB[14]
+	Local aNfVinc		:= PARAMIXB[15]
+	Local aAdetPag		:= PARAMIXB[16]
+	Local aObsCotAux    := PARAMIXB[17]
+	local aRetorno		:= {}
+	local aAreaCD2		:= CD2->(getArea())
+	local aAreaSD2		:= SD2->(getArea())
 
+	SC6->(DBGoTop())
+	SC6->(dbSetOrder(4))
+	SC6->( DbSeek( xFilial("SC6") + SF2->F2_DOC + SF2->F2_SERIE) )
 
-       
-    EndIf
+	SC5->(DBGoTop())
+	SC5->(dbSetOrder(1))
+	SC5->( MsSeek( xFilial("SC5") + SC6->C6_NUM ) )
 
-    RestArea(aArea)
-Return
+	If !Empty(SC5->C5_XMENNOT)
+		cMensCli += " - " + ALLTRIM(SC5->C5_XMENNOT)
+	EndIf
+
+	cMensCli := STRTRAN(cMensCli,'"','')
+
+	aadd( aRetorno, aProd		)
+	aadd( aRetorno, cMensCli	)
+	aadd( aRetorno, cMensFis	)
+	aadd( aRetorno, aDest		)
+	aadd( aRetorno, aNota		)
+	aadd( aRetorno, aInfoItem	)
+	aadd( aRetorno, aDupl		)
+	aadd( aRetorno, aTransp		)
+	aadd( aRetorno, aEntrega	)
+	aadd( aRetorno, aRetirada	)
+	aadd( aRetorno, aVeiculo	)
+	aadd( aRetorno, aReboque	)
+	aadd( aRetorno, aNfVincRur	)
+	aadd( aRetorno, aEspVol 	)
+	aadd( aRetorno, aNfVinc 	)
+	aadd( aRetorno, aAdetPag)
+	aadd( aRetorno, aObsCotAux  )
+
+	restArea(aAreaSC6)
+	restArea(aAreaSC5)
+	restArea(aAreaSF7)
+	restArea(aAreaSF4)
+	restArea(aAreaSA2)
+	restArea(aAreaSA1)
+	restArea(aAreaCD2)
+	restArea(aAreaSM4)
+	restArea(aAreaSD2)
+	restArea(aAreaDAK)
+	restArea(aAreaDA3)
+	restArea(aAreaSFT)
+	restArea(aArea)
+
+return aRetorno
+
