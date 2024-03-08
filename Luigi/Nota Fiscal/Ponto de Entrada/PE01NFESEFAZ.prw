@@ -60,7 +60,7 @@ user function PE01NFESEFAZ()
 	EndIf
 
 	cMensCli := STRTRAN(cMensCli,'"','')
-
+ 
 	aadd( aRetorno, aProd		)
 	aadd( aRetorno, cMensCli	)
 	aadd( aRetorno, cMensFis	)

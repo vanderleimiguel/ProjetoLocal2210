@@ -18,7 +18,10 @@
 	"lastPrograms": [
 		{
 			"label": "sigafat"
+		},
+		{
+			"label": "sigamdi"
 		}
 	],
-	"lastProgramExecuted": "sigafat"
+	"lastProgramExecuted": "sigamdi"
 }
