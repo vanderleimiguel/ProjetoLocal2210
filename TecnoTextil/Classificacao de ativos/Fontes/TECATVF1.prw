@@ -2,7 +2,7 @@
 #INCLUDE "TOTVS.CH"
 
 /*/{Protheus.doc} TECATVF1
-Função Gatilho para Atualizar Codigo do Bem
+Funcao Gatilho para Atualizar Codigo do Bem
 @author Wagner Neves
 @since 18/03/2024
 @version 1.0
