@@ -3,12 +3,11 @@ Passo-a-Passo para instalação da classificação de ativo:
 
 1. Compilar fontes: 
 	classificacao de ativo\Fontes\TECATVF1.prw				- Funcao Gatilho para Atualizar Codigo do Bem
+	classificacao de ativo\Fontes\TECATVF2.prw				- Funcao do ponto de entrada para atualizacao de dados SN1
 	classificacao de ativo\Ponto de Entrada\MA103ATF.prw  	- Manipulação do aCols e aItens enviados para Integração com Ativo Fixo
+	classificacao de ativo\Compatibilizador\UPDTEC1.prw		- Compatibilizador
 
-2. Append do gatilho na tabela SX7
-	2.1 - Abrir o apsdu
-	2.2 - Abrir a tabela SX7	
-	2.3 - Gerar um append do arquvo dtc do caminho:
-		classificacao de ativo\Gatilho\sx70101.dtc  		- Gatilho
+2. Executar o compatibilizador :
+	classificacao de ativo\Compatibilizador\UPDTEC1.prw		- Compatibilizador
 		
 .Fim
