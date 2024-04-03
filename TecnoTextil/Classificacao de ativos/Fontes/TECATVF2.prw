@@ -2,12 +2,17 @@
 #INCLUDE "TOTVS.CH"
 
 /*/{Protheus.doc} TECATVF2
-Funcao do ponto de entrada para atualizacao de dados SN1
+Funcao do ponto de entrada para atualizacao de dados
 @author Wagner Neves
 @since 18/03/2024
 @version 1.0
 @type function
 /*/
+
+/*---------------------------------------------------------------------*
+ | Func:  TECATVF2                                                     |
+ | Desc:  Atualiza dados da SN1                                        |
+ *---------------------------------------------------------------------*/
 User Function TECATVF2(aCab)
     Local aArea     := GetArea()
     Local cAliasSN1 := GetNextAlias()
@@ -15,6 +20,7 @@ User Function TECATVF2(aCab)
     Local cAlqImp5  := SD1->D1_ALQIMP5
     Local cAlqImp6  := SD1->D1_ALQIMP6
     Local cTES      := SD1->D1_TES
+    Local cItem     := ""
     Local cGrupo    := ""
     Local nQtdReg   := 0
     Local cCodBem   := ""
@@ -27,6 +33,7 @@ User Function TECATVF2(aCab)
     Local nALIQPIS  := 0
     Local nALIQCOF  := 0
     Local nORIGCRD  := 0
+    Local nItem     := 0
 
     //Alicota PIS
     nALIQPIS   := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_ALIQPIS"})
@@ -76,8 +83,17 @@ User Function TECATVF2(aCab)
         (cAliasSN1)->(DbGoTop())
     
         //Tratamento de codigo do bem
-        nQtdReg := (cAliasSN1)->QTDREG
-        cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg + 1),6,"0")
+        nQtdReg := (cAliasSN1)->QTDREG + 1
+        cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg),6,"0")
+
+        //Localiza item
+        nItem   := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_ITEM"})
+        cItem   := aCab[nItem][2]
+
+        SN1->(DbSetOrder(1))
+        While SN1->(DBSeek(FWXFilial('SN1') + cCodBem + cItem))
+            cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg + 1),6,"0")
+        EndDo
 
         //Grava codigo do Bem
         nPosBase    := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_CBASE"})
@@ -86,6 +102,8 @@ User Function TECATVF2(aCab)
         else
             aCab[nPosBase][2]   := cCodBem
         EndIf 
+
+
     EndIf
 
     //Busca tributos atraves da TES
@@ -123,3 +141,36 @@ User Function TECATVF2(aCab)
     RestArea(aArea)
 
 Return aCab
+
+/*---------------------------------------------------------------------*
+ | Func:  TECATVF3                                                     |
+ | Desc:  Atualiza dados da SN3                                        |
+ *---------------------------------------------------------------------*/
+User Function TECATVF3(aCab, aItens)
+    Local aArea     := GetArea()
+    Local cGrpDesc  := ""
+    Local cGrupo    := ""
+    Local nPosGrupo := 0
+    Local cCContab  := ""
+    Local nItem
+
+    //Busca codigo do grupo
+    nPosGrupo   := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_GRUPO"})
+    If nPosGrupo <> 0
+        cGrupo      := aCab[nPosGrupo][2]
+
+        SNG->(DBSetOrder(1))
+	    IF SNG->(DBSeek(FWXFilial('SNG') + cGrupo))
+            cGrpDesc    := SNG->NG_DESCRIC
+            cCContab    := SNG->NG_CCONTAB
+       
+            For nItem:=1 to Len(aItens)
+                aAdd(aItens[nItem],{"N3_HISTOR",    AllTrim(cGrpDesc) })
+                aAdd(aItens[nItem],{"N3_CCONTAB",   cCContab })
+            Next nItem
+        EndIf
+    EndIf
+
+    RestArea(aArea)
+
+Return aItens

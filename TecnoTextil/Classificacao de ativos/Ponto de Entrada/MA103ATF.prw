@@ -11,10 +11,12 @@ User Function MA103ATF()
     Local aCab      := ParamIXB[1]
     Local aItens    := ParamIXB[2]
     Local _aCab     := {}
+    Local _aItens   := {}
 
     //Chama rotina para atualizacao de dados SN1
     If ExistBlock("TECATVF2")
 	    _aCab   := U_TECATVF2(aCab)
-	EndIf
+        _aItens := U_TECATVF3(_aCab, aItens)
+  	EndIf
 
-Return({_aCab,aItens})
+Return({_aCab,_aItens})
