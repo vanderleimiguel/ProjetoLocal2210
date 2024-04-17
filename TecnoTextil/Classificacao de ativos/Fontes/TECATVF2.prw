@@ -91,9 +91,9 @@ User Function TECATVF2(aCab)
         cItem   := aCab[nItem][2]
 
         SN1->(DbSetOrder(1))
-        While SN1->(DBSeek(FWXFilial('SN1') + cCodBem + cItem))
+        If SN1->(DBSeek(FWXFilial('SN1') + cCodBem + cItem))
             cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg + 1),6,"0")
-        EndDo
+        EndIf
 
         //Grava codigo do Bem
         nPosBase    := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_CBASE"})
