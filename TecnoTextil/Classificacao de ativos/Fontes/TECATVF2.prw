@@ -22,7 +22,6 @@ User Function TECATVF2(aCab)
     Local cTES      := SD1->D1_TES
     Local cItem     := ""
     Local cGrupo    := ""
-    Local nQtdReg   := 0
     Local cCodBem   := ""
     Local cQuery 	:= ""
     Local nPosGrupo := 0
@@ -74,17 +73,17 @@ User Function TECATVF2(aCab)
         SNG->(DBSetOrder(1))
 
         //Query que conta, quantidade de cadastros do grupo na SN1
-        cQuery := "SELECT COUNT(*) AS QTDREG "
+        cQuery := "SELECT MAX(N1_CBASE) AS QTDREG "
         cQuery += "FROM "+RetSqlName("SN1") + " SN1 "
         cQuery += "WHERE N1_GRUPO='" + cGrupo + "' "
+        cQuery += "AND N1_CBASE LIKE '" + cGrupo + "%" + "' "
         cQuery += "AND SN1.D_E_L_E_T_=' ' "
         cQuery := ChangeQuery(cQuery)
         dbUseArea(.T.,"TOPCONN",TcGenQry(,,cQuery),cAliasSN1,.F.,.T.)
         (cAliasSN1)->(DbGoTop())
     
         //Tratamento de codigo do bem
-        nQtdReg := (cAliasSN1)->QTDREG + 1
-        cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg),6,"0")
+        cCodBem := Soma1((cAliasSN1)->QTDREG)
 
         //Localiza item
         nItem   := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_ITEM"})
@@ -92,7 +91,7 @@ User Function TECATVF2(aCab)
 
         SN1->(DbSetOrder(1))
         If SN1->(DBSeek(FWXFilial('SN1') + cCodBem + cItem))
-            cCodBem := AllTrim(cGrupo) + PadL(cValToChar(nQtdReg + 1),6,"0")
+            cCodBem := Soma1((cAliasSN1)->QTDREG)
         EndIf
 
         //Grava codigo do Bem
