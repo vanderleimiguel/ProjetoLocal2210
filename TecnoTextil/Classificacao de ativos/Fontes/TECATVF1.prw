@@ -12,6 +12,7 @@ User Function TECATVF1()
 	Local aArea     := GetArea()
     Local cAliasSN1 := GetNextAlias()
     Local cGrupo    := M->N1_GRUPO
+    Local cItem     := M->N1_ITEM
     Local cCodBem   := ""
     Local cQuery 	:= ""
 
@@ -26,7 +27,16 @@ User Function TECATVF1()
 	(cAliasSN1)->(DbGoTop())
 
     //Tratamento de codigo do bem
-    cCodBem := Soma1((cAliasSN1)->QTDREG)
+    If Empty((cAliasSN1)->QTDREG)
+        cCodBem := cGrupo + "000001"
+    else
+        cCodBem := Soma1((cAliasSN1)->QTDREG)
+    EndIf
+
+    SN1->(DbSetOrder(1))
+    If SN1->(DBSeek(FWXFilial('SN1') + cCodBem + cItem))
+        cCodBem := Soma1((cAliasSN1)->QTDREG)
+    EndIf
 
     RestArea(aArea)
 Return cCodBem

@@ -83,7 +83,11 @@ User Function TECATVF2(aCab)
         (cAliasSN1)->(DbGoTop())
     
         //Tratamento de codigo do bem
-        cCodBem := Soma1((cAliasSN1)->QTDREG)
+        If Empty((cAliasSN1)->QTDREG)
+            cCodBem := cGrupo + "000001"
+        else
+            cCodBem := Soma1((cAliasSN1)->QTDREG)
+        EndIf
 
         //Localiza item
         nItem   := aScan(aCab, {|x| AllTrim(Upper(x[1])) == "N1_ITEM"})
