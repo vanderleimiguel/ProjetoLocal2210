@@ -1,0 +1,7 @@
+Passo-a-Passo para instalação da Conciliação Automatica:
+==============================================================
+
+1. Compilar fontes: 
+	Coonciliacao Automatica\Ponto de Entrada\Fa473Cta.prw  	- Ponto de Entrada para ajuste de Bancos
+
+.Fim
